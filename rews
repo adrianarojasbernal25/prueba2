@@ -1,0 +1,32 @@
+%table.table.table-striped.table-hover.mt-4
+  %thead
+    %tr
+      %th Nombre
+      %th Acciones
+  %tbody
+    - @authors.each do |a|
+      %tr
+        %td= a.name
+        %td
+          %button.btn.btn-primary.btn-sm{type: "button", "data-bs-toggle" => "modal", "data-bs-target" => "#modalEdit-#{a.id}"}
+            Editar
+        %td= link_to 'Eliminar', author_path(a), method: :delete, data: { confirm: '¿Seguro que quieres eliminar este autor?' }, class: "btn btn-danger btn-sm"
+
+      / Modal DEBE ir dentro del each para que `a` exista
+      .modal.fade{id: "modalEdit-#{a.id}", tabindex: "-1", "aria-label" => "modalEditLabel-#{a.id}", "aria-hidden" => "true"}
+        .modal-dialog
+          .modal-content
+            .modal-header
+              %h5.modal-title{id: "modalEditLabel-#{a.id}"} Editar Autor
+              %button.btn-close{"type" => "button", "data-bs-dismiss" => "modal", "aria-label" => "Close"}
+            .modal-body
+              = form_with(model: @author, class: "form-box") do |form|
+
+                %p
+                  = form.label :name, 'Nombre'
+                  = form.text_field :name
+                %p
+                  = form.submit 'Guardar cambios'
+
+                .modal-footer
+                  %button.btn.btn-secondary{"type" => "button", "data-bs-dismiss" => "modal"} Cancelar
